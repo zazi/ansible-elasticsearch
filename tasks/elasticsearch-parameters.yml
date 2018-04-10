@@ -73,3 +73,9 @@
   set_fact: log_dir={{ es_log_dir }}/{{instance_suffix}}
 - name: set fact log_dir
   set_fact: data_dirs={{ es_data_dirs | append_to_list('/'+instance_suffix) }}
+
+- name: set fact es_home
+  set_fact: es_home={{ es_home }}
+  when: es_home is defined
+  with_items: 
+    - { eshome: "{{ es_home }}" }

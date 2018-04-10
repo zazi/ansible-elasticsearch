@@ -49,10 +49,16 @@
 - name: Make sure elasticsearch is started
   service: name={{instance_init_script | basename}} state=started enabled=yes
   when: es_start_service
+  with_items:
+    - { instanceinitscript: "{{ instance_init_script }}" }
+    - { servicename: "{{ instance_init_script | basename }}" }
 
 - name: Wait for elasticsearch to startup
   wait_for: host={{es_api_host}} port={{es_api_port}} delay=5 connect_timeout=1
   when: es_restarted is defined and es_restarted.changed and es_start_service
+  with_items:
+    - { esapihost: "{{ es_api_host }}" }
+    - { esapiport: "{{ es_api_port }}" }
 
 - name: set fact manage_native_realm to false
   set_fact: manage_native_realm=false
